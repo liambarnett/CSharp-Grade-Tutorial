@@ -18,7 +18,7 @@ namespace Grades
         {
             GradeStatistics stats = new GradeStatistics();
 
-            /* Avg test1 */
+            /* Avg */
             float sum = 0;
             foreach(float grade in grades)
             {
