@@ -12,6 +12,7 @@ namespace Grades
         public GradeBook()
         {
             grades = new List<float>();
+            Subjects = new List<string>(); //public list
         }
 
         public GradeStatistics ComputeStatistics()
@@ -34,12 +35,19 @@ namespace Grades
 
         public void AddGrade(float grade)
         {
-            grades.Add(grade);
+            grades.Add(grade); 
+        }
+
+        public void AddSubject(string subject)
+        {
+            Subjects.Add(subject);   
         }
 
         public string Name;
 
         private List<float> grades;
+
+        public List<string> Subjects; //public list
 
     }
 }

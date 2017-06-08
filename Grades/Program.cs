@@ -27,6 +27,13 @@ namespace Grades
             Console.WriteLine("Highest: " + stats.HighestGrade);
             Console.WriteLine("Lowest: " + stats.LowestGrade);
 
+            book.AddSubject("Computer Science");
+
+            foreach (string subject in book.Subjects)
+            {
+                Console.WriteLine(subject);
+            }
+
             if (System.Diagnostics.Debugger.IsAttached) Console.ReadLine(); 
 
 

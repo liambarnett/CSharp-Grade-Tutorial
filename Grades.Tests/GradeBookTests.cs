@@ -45,5 +45,14 @@ namespace Grades.Tests
             GradeStatistics result = book.ComputeStatistics();
             Assert.AreEqual(85.16, result.AverageGrade, 0.01);
         }
+
+        [TestMethod]
+        public void AddSubjectName()
+        {
+            GradeBook subject = new GradeBook();
+            subject.AddSubject("English");
+
+            Assert.AreEqual("English", subject.Subjects[0]);
+        }
     }
 }
