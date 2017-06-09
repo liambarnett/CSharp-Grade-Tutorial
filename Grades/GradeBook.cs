@@ -62,21 +62,18 @@ namespace Grades
 
             set
             {
-                try
+                while (string.IsNullOrEmpty(value)) //loops until a not null value has been input
                 {
-                    if (String.IsNullOrEmpty(value))
-                    {
-                        throw new ArgumentException("Name cannot be null or empty");
+                    Console.WriteLine("Please enter a valid value");
+                    value = Console.ReadLine();
+                }
 
-                        
-                    }
+                if (string.IsNullOrEmpty(value)) //if null value is detected exception is thrown
+                {
+                    throw new ArgumentException("Name cannot be null or empty");
 
                 }
-                catch (ArgumentException ax)
-                {
-                    Console.WriteLine("ERROR: Null value entered for book name");
-                }
-                if (_name != value)
+                else if (_name != value) //if input is not equal to current value then proceed
                 {
                     NameChangedEventArgs args = new NameChangedEventArgs();
                     args.ExistingName = _name;

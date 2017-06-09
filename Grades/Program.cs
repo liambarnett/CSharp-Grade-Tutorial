@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Speech.Synthesis;
 using System.Text;
@@ -12,45 +13,90 @@ namespace Grades
         static void Main(string[] args)
         {
 
-             string _name;
+           // speak(); //methods uses an imported reference to speak at runtime
 
-        //  SpeechSynthesizer synth = new SpeechSynthesizer();
-        //  synth.Speak("Hello! This is the GradBook program");
+            GradeBook book = new GradeBook(); //create new Gradebook object
 
-        GradeBook book = new GradeBook();
+            GetBookName(book); //set the book name
+            AddGrades(book);   //add grades to gradebook
+            SaveGrades(book);  //save grades/write to console
 
-            //event subscribers
-            book.NameChanged += OnNameChanged;
+            //outside tutorial
+            AddSubject(book);
+            SaveSubject(book);
 
-            //  book.Name = "Liam's gradebook";
-            //  book.Name = "Lora's gradebook";
+            if (System.Diagnostics.Debugger.IsAttached) Console.ReadLine();
+        }
 
-            //   Console.WriteLine(book.Name);
+        private static void speak()
+        {
+            SpeechSynthesizer synth = new SpeechSynthesizer();
+            synth.Speak("Hello! This is the GradBook program");
+        }
 
-            book.AddGrade(91);
-            book.AddGrade(89.5f);
-            book.AddGrade(75);
-            book.WriteGrades(Console.Out);
-
-            book.Name = Console.ReadLine();
-
-
-
-            GradeStatistics stats = book.ComputeStatistics();
-
-            WriteResult("Average", stats.AverageGrade);
-            WriteResult("Highest", stats.HighestGrade);
-            Console.WriteLine("Lowest: " + stats.LowestGrade);
-            WriteResult(stats.Description, stats.LetterGrade);
-
+        private static void AddSubject(GradeBook book)
+        {
             book.AddSubject("Computer Science");
+        }
 
+        private static void SaveSubject(GradeBook book)
+        {
             foreach (string subject in book.Subjects)
             {
                 Console.WriteLine(subject);
             }
+        }
 
-            if (System.Diagnostics.Debugger.IsAttached) Console.ReadLine();
+        private static void SaveGrades(GradeBook book)
+        {
+            //Instantiate GradeStatistics object 
+            GradeStatistics stats = book.ComputeStatistics();
+
+            WriteResult("Average", stats.AverageGrade);
+            WriteResult("Highest", stats.HighestGrade);
+            WriteResult("Lowest", stats.LowestGrade);
+            WriteResult(stats.Description, stats.LetterGrade);
+
+            //Write grades to console
+            book.WriteGrades(Console.Out);
+
+            //Write grades to file
+            using (StreamWriter outputFile = File.CreateText("grades.txt"))
+            {
+                book.WriteGrades(outputFile);
+            }
+
+        }
+
+        private static void AddGrades(GradeBook book)
+        {
+            book.AddGrade(91);
+            book.AddGrade(89.5f);
+            book.AddGrade(75);
+        }
+
+        private static void GetBookName(GradeBook book)
+        {
+            //event subscribers
+            book.NameChanged += OnNameChanged;
+
+            try
+            {
+                Console.WriteLine("Enter a name");
+                book.Name = Console.ReadLine();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (NullReferenceException)
+            {
+                Console.WriteLine("Somthing went wrong lol");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         static void OnNameChanged(object sender, NameChangedEventArgs args)
