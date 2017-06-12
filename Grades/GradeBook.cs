@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Grades
 {
-    public class GradeBook
+    public class GradeBook : GradeTracker
     {
 
         public GradeBook()
@@ -17,9 +18,11 @@ namespace Grades
             Subjects = new List<string>(); //public list
         }
 
-        public GradeStatistics ComputeStatistics()
+        public override GradeStatistics ComputeStatistics()
         {
             GradeStatistics stats = new GradeStatistics();
+
+            Console.WriteLine("GradeBook::ComputeStatistics");
 
             /* Avg  */
             float sum = 0;
@@ -35,7 +38,7 @@ namespace Grades
             return stats;
         }
 
-        public void WriteGrades(TextWriter destination)
+        public override void WriteGrades(TextWriter destination)
         {
             for (int i = grades.Count; i > 0; i--)
             {
@@ -43,55 +46,24 @@ namespace Grades
             }
         }
 
-        public void AddGrade(float grade)
+        public override void AddGrade(float grade)
         {
             grades.Add(grade);
         }
 
-        public void AddSubject(string subject)
+        public override IEnumerator GetEnumerator()
         {
-            Subjects.Add(subject);
+            return grades.GetEnumerator();
         }
 
-        public string Name
-        {
-            get
+
+        /*    public void AddSubject(string subject)
             {
-                return _name;
+                Subjects.Add(subject);
             }
+            */
 
-            set
-            {
-                while (string.IsNullOrEmpty(value)) //loops until a not null value has been input
-                {
-                    Console.WriteLine("Please enter a valid value");
-                    value = Console.ReadLine();
-                }
-
-                if (string.IsNullOrEmpty(value)) //if null value is detected exception is thrown
-                {
-                    throw new ArgumentException("Name cannot be null or empty");
-
-                }
-                else if (_name != value) //if input is not equal to current value then proceed
-                {
-                    NameChangedEventArgs args = new NameChangedEventArgs();
-                    args.ExistingName = _name;
-                    args.NewName = value;
-
-                    NameChanged(this, args);
-                    // Console.WriteLine("test");
-                }
-                _name = value;
-            }
-
-        }
-
-        public event NameChangedDelegate NameChanged;
-
-        private string _name;
-
-        private List<float> grades;
+        protected List<float> grades;
 
         public List<string> Subjects; //public list
 

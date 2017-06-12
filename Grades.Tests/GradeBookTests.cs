@@ -50,7 +50,7 @@ namespace Grades.Tests
         public void AddSubjectName()
         {
             GradeBook subject = new GradeBook();
-            subject.AddSubject("English");
+        //    subject.AddSubject("English");
 
             Assert.AreEqual("English", subject.Subjects[0]);
         }
